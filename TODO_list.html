@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>To-Do List</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Custom CSS -->
+    <style>
+        .container {
+            margin-top: 30px;
+        }
+
+        .task-list {
+            margin-top: 30px;
+            list-style-type: none;
+            padding-left: 0;
+            cursor: pointer;
+        }
+
+        .task-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .task-list li:last-child {
+            border-bottom: none;
+        }
+
+        .task-list .task {
+            flex: 1;
+        }
+
+        .task-list .delete-button {
+            margin-left: 10px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .Todo {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <orm id="task-form">
+                        <div class="form-group">
+                            <label for="task-input">
+                                <Task>
+                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
+                                        alt="avatar 1" style="width: 45px; height: auto;">
+                                    <span class="ms-2">Alice Mayer</span>
+                                    <label for="task-input">Task</label><i class="bi bi-card-checklist"></i>
+                                    <input type="text" class="form-control" id="task-input"
+                                        placeholder="Enter a task..."><br>
+                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
+                                        alt="avatar 1" style="width: 45px; height: auto;">
+                                    <span class="ms-2">Kate Moss</span>
+                                    <label for="task-input">Task</label><i class="bi bi-card-checklist"></i>
+                                    <input type="text" class="form-control" id="task-input"
+                                        placeholder="Enter a task..."><br>
+                                    <label for="task-input">Task Description</label>
+                                    <textarea class="form-control" id="task-input" rows="5"></textarea><br>
+                                    <label for="responsible-input">Responsible</label>
+                                    <input type="text" class="form-control" id="responsible-input"
+                                        placeholder="Responsible person">
+                                    <label for="eta-input">ETA</label>
+                                    <input type="date" class="form-control" id="eta-input" placeholder="Add ETA">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Task</button>
+                        </form>
+                        <ul class="task-list"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNS3Xa"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <!-- Custom JavaScript -->
+    <script>
+        const taskForm = document.getElementById('task-form');
+        const taskList = document.querySelector('.task-list');
+        const tasks = [];
+        function addTask(e) {
+            e.preventDefault();
+            const taskInput = document.getElementById('task-input');
+            const taskText = taskInput.value;
+            if (taskText !== '') {
+                const task = {
+                    id: Date.now(),
+                    text: taskText,
+                    completed: false
+                };
+                tasks.push(task);
+                taskInput.value = '';
+                renderTasks();
+            }
+        }
+
+        function renderTasks() {
+            taskList.innerHTML = '';
+            tasks.forEach(task => {
+                const taskItem = document.createElement('li');
+                taskItem.innerHTML = `
+                    <span class="task ${task.completed ? 'completed' : ''}">${task.text}</span>
+                    <button class="btn btn-danger delete-button">Delete</button>
+                `;
+                const deleteButton = taskItem.querySelector('.delete-button');
+                deleteButton.addEventListener('click', () => deleteTask(task.id));
+                taskItem.addEventListener('click', () => toggleComplete(task.id));
+                taskList.appendChild(taskItem);
+            });
+        }
+
+        function deleteTask(id) {
+            const index = tasks.findIndex(task => task.id === id);
+            if (index !== -1) {
+                tasks.splice(index, 1);
+                renderTasks();
+            }
+        }
+
+        function toggleComplete(id) {
+            const index = tasks.findIndex(task => task.id === id);
+            if (index !== -1) {
+                tasks[index].completed = !tasks[index].completed;
+                renderTasks();
+            }
+        }
+
+        taskForm.addEventListener('submit', addTask);
+    </script>
+</body>
+</html>
